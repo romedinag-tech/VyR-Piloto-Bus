@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Seguimiento — Prueba Piloto Bus | V&R Ingeniería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azul-marino: #0a1d3a;
+    --azul-marino-claro: #15294d;
+    --azul-acento: #2b7fd6;
+    --naranja: #f39200;
+    --blanco: #ffffff;
+    --gris-texto: #4a5568;
+    --gris-borde: #e2e8f0;
+    --fondo: #f7f8fa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--fondo);
+    color: var(--azul-marino);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  header {
+    background: var(--azul-marino);
+    color: var(--blanco);
+    padding: 28px 48px;
+    border-bottom: 3px solid var(--naranja);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .brand img {
+    height: 64px;
+    width: auto;
+    display: block;
+  }
+
+  .brand-text { display: flex; flex-direction: column; }
+
+  .brand-name {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    line-height: 1;
+  }
+
+  .brand-tag {
+    font-size: 11px;
+    color: var(--azul-acento);
+    margin-top: 6px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.5px;
+  }
+
+  .header-meta .label {
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--naranja);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  /* Title section */
+  .title-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 56px 48px 32px;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--naranja);
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--azul-marino);
+    letter-spacing: -0.5px;
+    max-width: 800px;
+  }
+
+  .subtitle {
+    margin-top: 18px;
+    font-size: 17px;
+    color: var(--gris-texto);
+    max-width: 700px;
+    line-height: 1.6;
+  }
+
+  /* Divider */
+  .divider {
+    max-width: 1400px;
+    margin: 32px auto 0;
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--gris-borde);
+  }
+
+  .divider-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--naranja);
+  }
+
+  /* Dashboard container */
+  .dashboard-wrap {
+    max-width: 1400px;
+    margin: 32px auto 64px;
+    padding: 0 48px;
+  }
+
+  .dashboard-frame {
+    background: var(--blanco);
+    border: 1px solid var(--gris-borde);
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(10, 29, 58, 0.04), 0 4px 24px rgba(10, 29, 58, 0.06);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .dashboard-frame iframe {
+    width: 100%;
+    min-height: 720px;
+    border: 0;
+    display: block;
+  }
+
+  /* Footer */
+  footer {
+    background: var(--azul-marino);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 32px 48px;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  footer .legal { font-size: 12px; }
+
+  footer .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--naranja);
+    font-weight: 500;
+  }
+
+  footer .badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--naranja);
+    box-shadow: 0 0 0 4px rgba(243, 146, 0, 0.2);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    header { padding: 20px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .header-meta { text-align: left; }
+    .title-section { padding: 40px 24px 24px; }
+    h1 { font-size: 30px; }
+    .divider { padding: 0 24px; }
+    .dashboard-wrap { padding: 0 24px; margin: 24px auto 40px; }
+    .dashboard-frame iframe { min-height: 540px; }
+    footer { padding: 24px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <img src="logo.png" alt="V&R Ingeniería">
+    <div class="brand-text">
+      <span class="brand-name">V&amp;R Ingeniería</span>
+      <span class="brand-tag">Sistemas de transporte</span>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="label">Plataforma</div>
+    <div>Monitor Operacional</div>
+  </div>
+</header>
+
+<section class="title-section">
+  <div class="eyebrow">Prueba piloto</div>
+  <h1>Sistema de Seguimiento — Prueba Piloto Bus</h1>
+  <p class="subtitle">
+    Monitoreo en tiempo real de ocupación, velocidad y posición de unidades. Datos operacionales capturados mediante sensores embarcados y aplicación móvil de conteo manual.
+  </p>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-dot"></div>
+  <div class="divider-line"></div>
+</div>
+
+<main class="dashboard-wrap">
+  <div class="dashboard-frame">
+    <iframe
+      src="https://datastudio.google.com/embed/reporting/ee026e1b-708d-474b-b147-86a952f0ef64/page/gkGyF"
+      frameborder="0"
+      allowfullscreen
+      sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+    </iframe>
+  </div>
+</main>
+
+<footer>
+  <div class="legal">© V&amp;R Ingeniería · Ingeniería precisa para sistemas de transporte complejos</div>
+  <div class="badge">Piloto activo</div>
+</footer>
+
+</body>
+</html>
