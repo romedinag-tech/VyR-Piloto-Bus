@@ -3,264 +3,974 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Seguimiento — Prueba Piloto Bus | V&R Ingeniería</title>
+<title>Centro de Monitoreo de Operaciones de Buses | V&R Ingeniería</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --azul-marino: #0a1d3a;
     --azul-marino-claro: #15294d;
+    --azul-marino-hover: #1d3661;
     --azul-acento: #2b7fd6;
+    --azul-acento-claro: #4a9ae8;
     --naranja: #f39200;
+    --naranja-claro: #ffb84d;
     --blanco: #ffffff;
     --gris-texto: #4a5568;
+    --gris-texto-claro: #718096;
     --gris-borde: #e2e8f0;
+    --gris-borde-fuerte: #cbd5e0;
     --fondo: #f7f8fa;
+    --fondo-card: #ffffff;
+    --sombra-sutil: 0 1px 3px rgba(10, 29, 58, 0.04);
+    --sombra-media: 0 4px 24px rgba(10, 29, 58, 0.08);
+    --sidebar-width: 280px;
+    --sidebar-collapsed: 64px;
+    --header-height: 64px;
+    --transition: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
     background: var(--fondo);
     color: var(--azul-marino);
     line-height: 1.5;
     min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  /* Header */
-  header {
+  /* ========== HEADER ========== */
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-height);
     background: var(--azul-marino);
-    color: var(--blanco);
-    padding: 28px 48px;
-    border-bottom: 3px solid var(--naranja);
+    border-bottom: 2px solid var(--naranja);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 32px;
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .brand img {
-    height: 64px;
-    width: auto;
-    display: block;
-  }
-
-  .brand-text { display: flex; flex-direction: column; }
-
-  .brand-name {
-    font-family: 'Fraunces', serif;
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    line-height: 1;
-  }
-
-  .brand-tag {
-    font-size: 11px;
-    color: var(--azul-acento);
-    margin-top: 6px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-
-  .header-meta {
-    text-align: right;
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.7);
-    letter-spacing: 0.5px;
-  }
-
-  .header-meta .label {
-    text-transform: uppercase;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--naranja);
-    margin-bottom: 4px;
-    font-weight: 500;
-  }
-
-  /* Title section */
-  .title-section {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 56px 48px 32px;
-  }
-
-  .eyebrow {
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--naranja);
-    font-weight: 600;
-    margin-bottom: 16px;
-  }
-
-  h1 {
-    font-family: 'Fraunces', serif;
-    font-size: 44px;
-    font-weight: 500;
-    line-height: 1.15;
-    color: var(--azul-marino);
-    letter-spacing: -0.5px;
-    max-width: 800px;
-  }
-
-  .subtitle {
-    margin-top: 18px;
-    font-size: 17px;
-    color: var(--gris-texto);
-    max-width: 700px;
-    line-height: 1.6;
-  }
-
-  /* Divider */
-  .divider {
-    max-width: 1400px;
-    margin: 32px auto 0;
-    padding: 0 48px;
-    display: flex;
-    align-items: center;
+    padding: 0 24px;
+    z-index: 100;
     gap: 16px;
   }
-
-  .divider-line {
-    flex: 1;
-    height: 1px;
-    background: var(--gris-borde);
+  .header-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
+  .menu-toggle {
+    background: transparent; border: 0; color: var(--blanco); cursor: pointer;
+    padding: 8px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s var(--transition);
   }
-
-  .divider-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--naranja);
+  .menu-toggle:hover { background: rgba(255, 255, 255, 0.1); }
+  .menu-toggle svg { width: 22px; height: 22px; }
+  .brand { display: flex; align-items: center; gap: 12px; color: var(--blanco); min-width: 0; }
+  .brand img { height: 36px; width: auto; display: block; flex-shrink: 0; }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+  .brand-name {
+    font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600;
+    letter-spacing: 0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-
-  /* Dashboard container */
-  .dashboard-wrap {
-    max-width: 1400px;
-    margin: 32px auto 64px;
-    padding: 0 48px;
+  .brand-tag {
+    font-size: 10px; color: var(--naranja-claro); letter-spacing: 1.5px;
+    text-transform: uppercase; margin-top: 2px; font-weight: 500;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
+  .header-right { display: flex; align-items: center; gap: 16px; color: var(--blanco); }
+  .pilot-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--naranja-claro); font-weight: 500;
+    padding: 6px 12px; border: 1px solid rgba(243, 146, 0, 0.4); border-radius: 100px;
+  }
+  .pilot-badge::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--naranja); box-shadow: 0 0 0 3px rgba(243, 146, 0, 0.2);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-  .dashboard-frame {
+  /* ========== SIDEBAR ========== */
+  .sidebar {
+    position: fixed; top: var(--header-height); left: 0; bottom: 0;
+    width: var(--sidebar-width);
     background: var(--blanco);
-    border: 1px solid var(--gris-borde);
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(10, 29, 58, 0.04), 0 4px 24px rgba(10, 29, 58, 0.06);
-    overflow: hidden;
+    border-right: 1px solid var(--gris-borde);
+    overflow-y: auto; overflow-x: hidden;
+    transition: width 0.3s var(--transition), transform 0.3s var(--transition);
+    z-index: 90;
+  }
+  .sidebar.collapsed { width: var(--sidebar-collapsed); }
+  .sidebar.collapsed .nav-section-title,
+  .sidebar.collapsed .nav-item-label,
+  .sidebar.collapsed .nav-piloto-items,
+  .sidebar.collapsed .piloto-header span,
+  .sidebar.collapsed .piloto-header .chevron,
+  .sidebar.collapsed .placeholder-dot { display: none; }
+  .sidebar.collapsed .nav-section { border-bottom: 0; padding: 8px 0; }
+  .sidebar.collapsed .nav-item { justify-content: center; padding: 12px; }
+  .sidebar.collapsed .piloto-header { justify-content: center; padding: 12px; }
+
+  .nav-section { padding: 16px 0 12px; border-bottom: 1px solid var(--gris-borde); }
+  .nav-section:last-child { border-bottom: 0; }
+  .nav-section-title {
+    font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gris-texto-claro); padding: 0 24px 8px; user-select: none;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 24px; color: var(--gris-texto); text-decoration: none;
+    font-size: 14px; font-weight: 400; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.15s var(--transition);
+    user-select: none;
+  }
+  .nav-item.home {
+    color: var(--azul-marino); font-weight: 500;
+  }
+  .nav-item:hover { background: var(--fondo); color: var(--azul-marino); }
+  .nav-item.active {
+    background: rgba(43, 127, 214, 0.06);
+    color: var(--azul-marino);
+    font-weight: 500;
+    border-left-color: var(--naranja);
+  }
+  .nav-icon { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.85; }
+  .nav-item-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .placeholder-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gris-borde-fuerte); flex-shrink: 0;
+  }
+  .placeholder-dot.has-data {
+    background: var(--naranja); box-shadow: 0 0 0 2px rgba(243, 146, 0, 0.18);
+  }
+
+  /* Piloto acordeón */
+  .piloto-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 24px; color: var(--azul-marino);
+    font-size: 13.5px; font-weight: 500; cursor: pointer;
+    transition: background 0.15s var(--transition);
+    user-select: none;
+  }
+  .piloto-header:hover { background: var(--fondo); }
+  .piloto-header .chevron {
+    margin-left: auto; width: 14px; height: 14px;
+    transition: transform 0.2s var(--transition);
+    opacity: 0.6; flex-shrink: 0;
+  }
+  .piloto-header.expanded .chevron { transform: rotate(90deg); }
+  .nav-piloto-items {
+    overflow: hidden; max-height: 0;
+    transition: max-height 0.3s var(--transition);
+  }
+  .nav-piloto-items.open { max-height: 400px; }
+  .nav-piloto-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 24px 8px 54px;
+    color: var(--gris-texto); text-decoration: none;
+    font-size: 13px; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.15s var(--transition);
     position: relative;
   }
-
-  .dashboard-frame iframe {
-    width: 100%;
-    min-height: 720px;
-    border: 0;
-    display: block;
+  .nav-piloto-item::before {
+    content: ''; position: absolute; left: 36px;
+    width: 8px; height: 1px; background: var(--gris-borde-fuerte);
   }
-
-  /* Footer */
-  footer {
-    background: var(--azul-marino);
-    color: rgba(255, 255, 255, 0.7);
-    padding: 32px 48px;
-    font-size: 13px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-
-  footer .legal { font-size: 12px; }
-
-  footer .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--naranja);
+  .nav-piloto-item:hover { background: var(--fondo); color: var(--azul-marino); }
+  .nav-piloto-item.active {
+    background: rgba(43, 127, 214, 0.06);
+    color: var(--azul-acento);
     font-weight: 500;
+    border-left-color: var(--azul-acento);
   }
 
-  footer .badge::before {
+  /* ========== MAIN ========== */
+  .main {
+    margin-top: var(--header-height);
+    margin-left: var(--sidebar-width);
+    padding: 32px 40px;
+    transition: margin-left 0.3s var(--transition);
+    min-height: calc(100vh - var(--header-height));
+  }
+  .main.sidebar-collapsed { margin-left: var(--sidebar-collapsed); }
+
+  .breadcrumb {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; color: var(--gris-texto-claro);
+    margin-bottom: 12px; letter-spacing: 1.5px;
+    text-transform: uppercase; font-weight: 600;
+  }
+  .breadcrumb-sep { color: var(--gris-borde-fuerte); }
+  .page-title {
+    font-family: 'Fraunces', serif; font-size: 36px; font-weight: 500;
+    line-height: 1.15; color: var(--azul-marino); letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .page-subtitle {
+    font-size: 15px; color: var(--gris-texto);
+    margin-bottom: 32px; max-width: 760px; line-height: 1.6;
+  }
+
+  /* Dashboard frame y placeholder */
+  .dashboard-frame {
+    background: var(--fondo-card); border: 1px solid var(--gris-borde);
+    border-radius: 4px;
+    box-shadow: var(--sombra-sutil), var(--sombra-media);
+    overflow: hidden; position: relative;
+  }
+  .dashboard-frame iframe { width: 100%; min-height: 720px; border: 0; display: block; }
+  .placeholder {
+    background: var(--fondo-card); border: 1px dashed var(--gris-borde-fuerte);
+    border-radius: 4px; padding: 80px 40px; text-align: center;
+    min-height: 480px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+  }
+  .placeholder-icon { width: 56px; height: 56px; margin-bottom: 24px; color: var(--gris-borde-fuerte); }
+  .placeholder-title {
+    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500;
+    color: var(--azul-marino); margin-bottom: 8px; letter-spacing: -0.3px;
+  }
+  .placeholder-text {
+    font-size: 14px; color: var(--gris-texto);
+    max-width: 520px; line-height: 1.6; margin-bottom: 24px;
+  }
+  .placeholder-tag {
+    display: inline-block; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--naranja);
+    border: 1px solid var(--naranja); padding: 5px 12px; border-radius: 100px;
+    font-weight: 600;
+  }
+
+  /* ========== LANDING ========== */
+  .landing { max-width: 1100px; }
+
+  .landing-hero {
+    margin-bottom: 56px;
+  }
+  .landing-eyebrow {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--naranja); font-weight: 600; margin-bottom: 12px;
+  }
+  .landing-h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 44px; font-weight: 500; line-height: 1.1;
+    color: var(--azul-marino); letter-spacing: -0.8px;
+    margin-bottom: 20px;
+    max-width: 780px;
+  }
+  .landing-lead {
+    font-size: 17px; line-height: 1.65;
+    color: var(--gris-texto); max-width: 780px;
+  }
+
+  .landing-section { margin-bottom: 56px; }
+  .landing-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 28px; font-weight: 500;
+    color: var(--azul-marino); letter-spacing: -0.4px;
+    margin-bottom: 18px;
+    position: relative; padding-left: 16px;
+  }
+  .landing-section h2::before {
     content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--naranja);
-    box-shadow: 0 0 0 4px rgba(243, 146, 0, 0.2);
+    position: absolute;
+    left: 0; top: 9px; bottom: 9px;
+    width: 4px; background: var(--naranja);
+  }
+  .landing-section p {
+    font-size: 15px; line-height: 1.7;
+    color: var(--gris-texto); max-width: 780px; margin-bottom: 14px;
+  }
+  .landing-section p strong { color: var(--azul-marino); font-weight: 600; }
+
+  /* Grid de áreas con ilustraciones */
+  .areas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 32px;
+    margin-bottom: 24px;
+  }
+  .area-card {
+    background: var(--fondo-card);
+    border: 1px solid var(--gris-borde);
+    border-radius: 6px;
+    padding: 28px 24px;
+    transition: all 0.2s var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .area-card:hover {
+    border-color: var(--naranja);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-media);
+  }
+  .area-card-illu {
+    width: 100%;
+    height: 120px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #f7f8fa 0%, #eef1f5 100%);
+    border-radius: 4px;
+  }
+  .area-card-illu svg { max-width: 100%; max-height: 100%; }
+  .area-card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px; font-weight: 600;
+    color: var(--azul-marino);
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
+  .area-card-text {
+    font-size: 13.5px; line-height: 1.55;
+    color: var(--gris-texto);
   }
 
-  /* Responsive */
-  @media (max-width: 768px) {
-    header { padding: 20px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
-    .header-meta { text-align: left; }
-    .title-section { padding: 40px 24px 24px; }
-    h1 { font-size: 30px; }
-    .divider { padding: 0 24px; }
-    .dashboard-wrap { padding: 0 24px; margin: 24px auto 40px; }
-    .dashboard-frame iframe { min-height: 540px; }
-    footer { padding: 24px; flex-direction: column; align-items: flex-start; }
+  .uso-section { margin-bottom: 48px; }
+
+  /* Mobile backdrop */
+  .mobile-backdrop {
+    display: none; position: fixed;
+    top: var(--header-height); left: 0; right: 0; bottom: 0;
+    background: rgba(10, 29, 58, 0.4); z-index: 85;
   }
+  .mobile-backdrop.show { display: block; }
+
+  /* TABLET */
+  @media (max-width: 1024px) {
+    .main { padding: 28px 32px; }
+    .dashboard-frame iframe { min-height: 600px; }
+    .page-title { font-size: 30px; }
+    .landing-h1 { font-size: 36px; }
+    .landing-section h2 { font-size: 24px; }
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    :root { --header-height: 56px; }
+    .brand-tag { display: none; }
+    .brand-name { font-size: 15px; }
+    .brand img { height: 30px; }
+    .pilot-badge { font-size: 9px; padding: 4px 10px; letter-spacing: 1px; }
+
+    .sidebar { transform: translateX(-100%); width: 280px; box-shadow: var(--sombra-media); }
+    .sidebar.mobile-open { transform: translateX(0); }
+    .sidebar.collapsed { width: 280px; }
+    .sidebar.collapsed .nav-section-title,
+    .sidebar.collapsed .nav-item-label,
+    .sidebar.collapsed .nav-piloto-items,
+    .sidebar.collapsed .piloto-header span,
+    .sidebar.collapsed .piloto-header .chevron,
+    .sidebar.collapsed .placeholder-dot { display: initial; }
+    .sidebar.collapsed .nav-section { padding: 16px 0 12px; border-bottom: 1px solid var(--gris-borde); }
+    .sidebar.collapsed .nav-item,
+    .sidebar.collapsed .piloto-header { justify-content: flex-start; padding: 10px 24px; }
+
+    .main { margin-left: 0 !important; padding: 20px 18px; }
+    .page-title { font-size: 24px; }
+    .page-subtitle { font-size: 14px; margin-bottom: 24px; }
+    .breadcrumb { font-size: 10px; }
+    .landing-h1 { font-size: 28px; }
+    .landing-lead { font-size: 15px; }
+    .landing-section h2 { font-size: 22px; }
+    .landing-section p { font-size: 14px; }
+    .landing-hero { margin-bottom: 40px; }
+    .landing-section { margin-bottom: 40px; }
+    .dashboard-frame iframe { min-height: 480px; }
+    .placeholder { padding: 56px 24px; min-height: 360px; }
+    .areas-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .header { padding: 0 14px; }
+    .header-right .pilot-badge span { display: none; }
+    .pilot-badge { padding: 6px; gap: 0; }
+    .main { padding: 16px 14px; }
+    .landing-h1 { font-size: 24px; }
+  }
+
+  .footer {
+    margin-top: 56px; padding-top: 24px;
+    border-top: 1px solid var(--gris-borde);
+    color: var(--gris-texto-claro); font-size: 11px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px; letter-spacing: 0.3px;
+  }
+  .footer-orange { color: var(--naranja); font-weight: 500; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="brand">
-    <img src="logo.png" alt="V&R Ingeniería">
-    <div class="brand-text">
-      <span class="brand-name">V&amp;R Ingeniería</span>
-      <span class="brand-tag">Sistemas de transporte</span>
+<!-- ========== HEADER ========== -->
+<header class="header">
+  <div class="header-left">
+    <button class="menu-toggle" id="menuToggle" aria-label="Alternar menú">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <div class="brand">
+      <img src="logo.png" alt="V&R Ingeniería">
+      <div class="brand-text">
+        <span class="brand-name">V&amp;R Ingeniería</span>
+        <span class="brand-tag">Centro de Monitoreo de Operaciones</span>
+      </div>
     </div>
   </div>
-  <div class="header-meta">
-    <div class="label">Plataforma</div>
-    <div>Monitor Operacional</div>
+  <div class="header-right">
+    <div class="pilot-badge"><span>Piloto activo</span></div>
   </div>
 </header>
 
-<section class="title-section">
-  <div class="eyebrow">Prueba piloto</div>
-  <h1>Sistema de Seguimiento — Prueba Piloto Bus</h1>
-  <p class="subtitle">
-    Monitoreo en tiempo real de ocupación, velocidad y posición de unidades. Datos operacionales capturados mediante sensores embarcados y aplicación móvil de conteo manual.
-  </p>
-</section>
+<!-- ========== SIDEBAR ========== -->
+<aside class="sidebar" id="sidebar">
 
-<div class="divider">
-  <div class="divider-line"></div>
-  <div class="divider-dot"></div>
-  <div class="divider-line"></div>
-</div>
-
-<main class="dashboard-wrap">
-  <div class="dashboard-frame">
-    <iframe
-      src="https://datastudio.google.com/embed/reporting/ee026e1b-708d-474b-b147-86a952f0ef64/page/gkGyF"
-      frameborder="0"
-      allowfullscreen
-      sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-    </iframe>
+  <!-- INICIO -->
+  <div class="nav-section">
+    <a class="nav-item home" data-section="inicio" data-title="" data-subtitle="" data-breadcrumb="Inicio">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span class="nav-item-label">Inicio</span>
+    </a>
   </div>
+
+  <!-- OPERACIÓN -->
+  <div class="nav-section">
+    <div class="nav-section-title">Operación</div>
+    <a class="nav-item" data-section="op-velocidad" data-breadcrumb="Operación · Velocidad" data-title="Velocidad" data-subtitle="Comportamiento de velocidad de la flota a lo largo del tiempo.">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+      <span class="nav-item-label">Velocidad</span>
+      <span class="placeholder-dot"></span>
+    </a>
+    <a class="nav-item" data-section="op-subidasbajadas" data-breadcrumb="Operación · Subidas y bajadas" data-title="Subidas y bajadas" data-subtitle="Movimiento de pasajeros por intervalo de tiempo.">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 10 12 5 17 10"></polyline><polyline points="7 14 12 19 17 14"></polyline></svg>
+      <span class="nav-item-label">Subidas y bajadas</span>
+      <span class="placeholder-dot"></span>
+    </a>
+    <a class="nav-item" data-section="op-ocupacion" data-breadcrumb="Operación · Ocupación" data-title="Ocupación" data-subtitle="Pasajeros a bordo en cada momento.">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+      <span class="nav-item-label">Ocupación</span>
+      <span class="placeholder-dot"></span>
+    </a>
+    <a class="nav-item" data-section="op-demografia" data-breadcrumb="Operación · Demografía" data-title="Demografía de pasajeros" data-subtitle="Distribución por género, edad y otros atributos detectados por el sensor.">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path></svg>
+      <span class="nav-item-label">Demografía</span>
+      <span class="placeholder-dot"></span>
+    </a>
+  </div>
+
+  <!-- MAPAS -->
+  <div class="nav-section">
+    <div class="nav-section-title">Mapas</div>
+    <a class="nav-item" data-section="map-posicion" data-breadcrumb="Mapas · Posición de flota" data-title="Última posición de la flota" data-subtitle="Ubicación actual de cada bus en el territorio.">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+      <span class="nav-item-label">Posición de flota</span>
+      <span class="placeholder-dot"></span>
+    </a>
+    <a class="nav-item" data-section="map-velocidades" data-breadcrumb="Mapas · Velocidades" data-title="Velocidades en el territorio" data-subtitle="Mapa de calor de velocidades medias por tramo. Identificación de zonas de congestión.">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+      <span class="nav-item-label">Velocidades</span>
+      <span class="placeholder-dot"></span>
+    </a>
+    <a class="nav-item" data-section="map-demanda" data-breadcrumb="Mapas · Demanda" data-title="Mapa de demanda" data-subtitle="Focos de subidas y bajadas. Localización de las paradas más demandadas.">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+      <span class="nav-item-label">Demanda</span>
+      <span class="placeholder-dot"></span>
+    </a>
+  </div>
+
+  <!-- COMPARADOR -->
+  <div class="nav-section">
+    <div class="nav-section-title">Comparador</div>
+    <a class="nav-item" data-section="cmp-fechas" data-breadcrumb="Comparador · Fechas" data-title="Comparador de fechas" data-subtitle="Comparar el comportamiento de la operación entre dos días.">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      <span class="nav-item-label">Comparar fechas</span>
+      <span class="placeholder-dot"></span>
+    </a>
+    <a class="nav-item" data-section="cmp-rangos" data-breadcrumb="Comparador · Rangos" data-title="Comparador de rangos" data-subtitle="Comparar el comportamiento entre dos períodos (semana vs semana, mes vs mes).">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+      <span class="nav-item-label">Comparar rangos</span>
+      <span class="placeholder-dot"></span>
+    </a>
+  </div>
+
+  <!-- CALIDAD -->
+  <div class="nav-section">
+    <div class="nav-section-title">Calidad</div>
+    <a class="nav-item" data-section="cal-dispositivos" data-breadcrumb="Calidad · Dispositivos" data-title="Estado de dispositivos" data-subtitle="Salud de cada sensor instalado en la flota.">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><polyline points="8 3 8 7 16 7 16 3"></polyline><line x1="12" y1="11" x2="12" y2="17"></line></svg>
+      <span class="nav-item-label">Dispositivos</span>
+      <span class="placeholder-dot"></span>
+    </a>
+    <a class="nav-item" data-section="cal-dato" data-breadcrumb="Calidad · Dato" data-title="Calidad del dato" data-subtitle="Porcentaje de eventos válidos, sospechosos y descartados.">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      <span class="nav-item-label">Calidad del dato</span>
+      <span class="placeholder-dot"></span>
+    </a>
+  </div>
+
+  <!-- LABORATORIO -->
+  <div class="nav-section">
+    <div class="nav-section-title">Laboratorio</div>
+    <div class="piloto-header" data-piloto="piloto1">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-4 9c-1 2 1 5 4 5h6c3 0 5-3 4-5l-4-9V2"></path><line x1="9" y1="2" x2="15" y2="2"></line></svg>
+      <span>Piloto 1 — Cámara vs App</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </div>
+    <div class="nav-piloto-items" data-piloto-items="piloto1">
+      <a class="nav-piloto-item" data-section="p1-vista" data-breadcrumb="Laboratorio · Piloto 1 · Vista general" data-title="Piloto 1: Vista general" data-subtitle="Dashboard combinado de las cuatro métricas operacionales. Comparación cámara Foorir vs app móvil.">
+        <span class="nav-item-label">Vista general</span><span class="placeholder-dot has-data"></span>
+      </a>
+      <a class="nav-piloto-item" data-section="p1-velocidad" data-breadcrumb="Laboratorio · Piloto 1 · Velocidad" data-title="Piloto 1: Velocidad" data-subtitle="Velocidad detectada en el tiempo, comparada entre fuentes.">
+        <span class="nav-item-label">Velocidad</span><span class="placeholder-dot"></span>
+      </a>
+      <a class="nav-piloto-item" data-section="p1-subidasbajadas" data-breadcrumb="Laboratorio · Piloto 1 · Subidas y bajadas" data-title="Piloto 1: Subidas y bajadas" data-subtitle="Conteo de movimientos por intervalo de 10 minutos.">
+        <span class="nav-item-label">Subidas y bajadas</span><span class="placeholder-dot"></span>
+      </a>
+      <a class="nav-piloto-item" data-section="p1-ocupacion" data-breadcrumb="Laboratorio · Piloto 1 · Ocupación" data-title="Piloto 1: Ocupación" data-subtitle="Pasajeros acumulados a lo largo del tiempo.">
+        <span class="nav-item-label">Ocupación</span><span class="placeholder-dot"></span>
+      </a>
+      <a class="nav-piloto-item" data-section="p1-mapa" data-breadcrumb="Laboratorio · Piloto 1 · Mapa" data-title="Piloto 1: Mapa" data-subtitle="Ubicación de eventos durante el piloto.">
+        <span class="nav-item-label">Mapa</span><span class="placeholder-dot"></span>
+      </a>
+    </div>
+    <div class="piloto-header" style="cursor: default; opacity: 0.55;">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-4 9c-1 2 1 5 4 5h6c3 0 5-3 4-5l-4-9V2"></path><line x1="9" y1="2" x2="15" y2="2"></line></svg>
+      <span style="color: var(--gris-texto-claro)">Piloto 2 — Próximo</span>
+    </div>
+  </div>
+
+</aside>
+
+<div class="mobile-backdrop" id="mobileBackdrop"></div>
+
+<!-- ========== MAIN ========== -->
+<main class="main" id="main">
+
+  <!-- LANDING (visible solo en sección "inicio") -->
+  <div id="landingView" class="landing" style="display:none">
+
+    <!-- HERO -->
+    <div class="landing-hero">
+      <div class="landing-eyebrow">Centro de Monitoreo de Operaciones de Buses</div>
+      <h1 class="landing-h1">Datos operacionales convertidos en decisiones de transporte.</h1>
+      <p class="landing-lead">
+        Plataforma de análisis para la gestión de flotas de buses: posición, velocidad, ocupación, demanda y calidad de servicio, integrados en un mismo entorno para operadores, autoridades y equipos de planificación.
+      </p>
+    </div>
+
+    <!-- NOSOTROS -->
+    <section class="landing-section">
+      <h2>Nosotros</h2>
+      <p>
+        Somos un equipo de profesionales con amplia experiencia en planificación, operación y análisis de sistemas de transporte público, con trayectoria en organismos del Estado, consultoría especializada y trabajo directo con operadores y autoridades regionales. Hemos desarrollado esta plataforma con un objetivo concreto: <strong>transformar la información que generan los buses cada día en decisiones que mejoren la operación, la rentabilidad y el servicio al pasajero.</strong>
+      </p>
+      <p>
+        Conocemos el sector desde adentro. Sabemos las preguntas que se hacen los operadores cuando un servicio empieza a perder pasajeros, las que se hacen los alcaldes cuando reciben reclamos por frecuencias, y las que se hacen los planificadores cuando deben decidir dónde reforzar la oferta. Esta plataforma fue construida para responder esas preguntas con datos, no con intuición.
+      </p>
+    </section>
+
+    <!-- EL SISTEMA -->
+    <section class="landing-section">
+      <h2>El sistema</h2>
+      <p>
+        El Centro de Monitoreo de Operaciones de Buses integra información proveniente de sensores embarcados, dispositivos GPS y aplicaciones de conteo manual, procesa los datos en la nube y los presenta en dashboards diseñados para distintos perfiles de usuario: gerencias operacionales, jefaturas de tráfico, equipos de planificación y autoridades públicas.
+      </p>
+      <p>
+        El sistema está diseñado para apoyar la gestión a través de cinco grandes áreas de análisis:
+      </p>
+
+      <!-- GRID DE 5 ÁREAS CON ILUSTRACIONES -->
+      <div class="areas-grid">
+
+        <!-- 1. OPERACIÓN -->
+        <div class="area-card">
+          <div class="area-card-illu">
+            <svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+              <!-- Dashboard con métricas operacionales -->
+              <rect x="10" y="15" width="180" height="70" rx="4" fill="#ffffff" stroke="#0a1d3a" stroke-width="1.5"/>
+              <line x1="10" y1="28" x2="190" y2="28" stroke="#0a1d3a" stroke-width="1"/>
+              <circle cx="18" cy="21.5" r="1.5" fill="#f39200"/>
+              <circle cx="25" cy="21.5" r="1.5" fill="#2b7fd6"/>
+              <!-- Velocidad: linea -->
+              <polyline points="20,75 35,60 50,65 65,45 80,55 95,40" fill="none" stroke="#2b7fd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="95" cy="40" r="2.5" fill="#f39200"/>
+              <!-- Barras: subidas/bajadas -->
+              <rect x="115" y="55" width="8" height="20" fill="#2b7fd6"/>
+              <rect x="127" y="48" width="8" height="27" fill="#0a1d3a"/>
+              <rect x="139" y="60" width="8" height="15" fill="#2b7fd6"/>
+              <rect x="151" y="42" width="8" height="33" fill="#0a1d3a"/>
+              <rect x="163" y="50" width="8" height="25" fill="#2b7fd6"/>
+              <rect x="175" y="55" width="8" height="20" fill="#0a1d3a"/>
+              <!-- Linea de eje -->
+              <line x1="20" y1="78" x2="100" y2="78" stroke="#cbd5e0" stroke-width="0.5"/>
+              <line x1="115" y1="78" x2="185" y2="78" stroke="#cbd5e0" stroke-width="0.5"/>
+            </svg>
+          </div>
+          <div class="area-card-title">Operación</div>
+          <div class="area-card-text">Métricas en vivo del comportamiento de la flota: velocidad, movimientos de pasajeros, ocupación a bordo y caracterización demográfica de la demanda.</div>
+        </div>
+
+        <!-- 2. MAPAS -->
+        <div class="area-card">
+          <div class="area-card-illu">
+            <svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+              <!-- Mapa estilizado -->
+              <rect x="15" y="10" width="170" height="80" rx="4" fill="#ffffff" stroke="#0a1d3a" stroke-width="1.5"/>
+              <!-- Calles -->
+              <path d="M 15 35 Q 60 30 110 50 T 185 55" fill="none" stroke="#cbd5e0" stroke-width="1.5"/>
+              <path d="M 30 90 Q 50 60 80 55 T 140 30 T 185 25" fill="none" stroke="#cbd5e0" stroke-width="1.5"/>
+              <path d="M 50 10 L 70 50 L 90 70 L 130 90" fill="none" stroke="#cbd5e0" stroke-width="1.5"/>
+              <!-- Pines bus -->
+              <g transform="translate(65,40)">
+                <path d="M 0 -8 C -5 -8 -8 -5 -8 0 C -8 4 0 10 0 10 C 0 10 8 4 8 0 C 8 -5 5 -8 0 -8 Z" fill="#f39200" stroke="#0a1d3a" stroke-width="1"/>
+                <circle cx="0" cy="-1" r="2.5" fill="#ffffff"/>
+              </g>
+              <g transform="translate(125,55)">
+                <path d="M 0 -8 C -5 -8 -8 -5 -8 0 C -8 4 0 10 0 10 C 0 10 8 4 8 0 C 8 -5 5 -8 0 -8 Z" fill="#2b7fd6" stroke="#0a1d3a" stroke-width="1"/>
+                <circle cx="0" cy="-1" r="2.5" fill="#ffffff"/>
+              </g>
+              <g transform="translate(95,75)">
+                <path d="M 0 -8 C -5 -8 -8 -5 -8 0 C -8 4 0 10 0 10 C 0 10 8 4 8 0 C 8 -5 5 -8 0 -8 Z" fill="#f39200" stroke="#0a1d3a" stroke-width="1"/>
+                <circle cx="0" cy="-1" r="2.5" fill="#ffffff"/>
+              </g>
+              <g transform="translate(155,38)">
+                <path d="M 0 -8 C -5 -8 -8 -5 -8 0 C -8 4 0 10 0 10 C 0 10 8 4 8 0 C 8 -5 5 -8 0 -8 Z" fill="#2b7fd6" stroke="#0a1d3a" stroke-width="1"/>
+                <circle cx="0" cy="-1" r="2.5" fill="#ffffff"/>
+              </g>
+              <!-- Brújula -->
+              <circle cx="172" cy="80" r="7" fill="#ffffff" stroke="#0a1d3a" stroke-width="1"/>
+              <text x="172" y="83" font-size="7" fill="#0a1d3a" text-anchor="middle" font-family="serif" font-weight="bold">N</text>
+            </svg>
+          </div>
+          <div class="area-card-title">Mapas</div>
+          <div class="area-card-text">Visualización geográfica de la operación: posición actual de cada unidad, zonas de velocidades reducidas y focos territoriales de subida y bajada de pasajeros.</div>
+        </div>
+
+        <!-- 3. COMPARADOR -->
+        <div class="area-card">
+          <div class="area-card-illu">
+            <svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+              <!-- Dos series temporales superpuestas -->
+              <rect x="15" y="15" width="170" height="70" rx="4" fill="#ffffff" stroke="#0a1d3a" stroke-width="1.5"/>
+              <!-- Grid de fondo -->
+              <line x1="25" y1="32" x2="175" y2="32" stroke="#eef1f5" stroke-width="0.5"/>
+              <line x1="25" y1="50" x2="175" y2="50" stroke="#eef1f5" stroke-width="0.5"/>
+              <line x1="25" y1="68" x2="175" y2="68" stroke="#eef1f5" stroke-width="0.5"/>
+              <!-- Serie A: azul -->
+              <polyline points="25,55 45,48 65,52 85,38 105,42 125,30 145,35 165,28 175,25" fill="none" stroke="#2b7fd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Serie B: naranja punteada -->
+              <polyline points="25,65 45,60 65,58 85,55 105,50 125,52 145,48 165,52 175,50" fill="none" stroke="#f39200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3,3"/>
+              <!-- Puntos terminales -->
+              <circle cx="175" cy="25" r="2.5" fill="#2b7fd6"/>
+              <circle cx="175" cy="50" r="2.5" fill="#f39200"/>
+              <!-- Eje X -->
+              <line x1="25" y1="78" x2="175" y2="78" stroke="#0a1d3a" stroke-width="1"/>
+              <!-- Leyenda -->
+              <line x1="120" y1="22" x2="130" y2="22" stroke="#2b7fd6" stroke-width="2"/>
+              <text x="133" y="24" font-size="6" fill="#0a1d3a" font-family="sans-serif">Período A</text>
+              <line x1="120" y1="30" x2="130" y2="30" stroke="#f39200" stroke-width="2" stroke-dasharray="2,2"/>
+              <text x="133" y="32" font-size="6" fill="#0a1d3a" font-family="sans-serif">Período B</text>
+            </svg>
+          </div>
+          <div class="area-card-title">Comparador</div>
+          <div class="area-card-text">Análisis temporal entre períodos. Permite contrastar días, semanas o meses específicos para evaluar el impacto de cambios operacionales, estacionalidad o tendencias.</div>
+        </div>
+
+        <!-- 4. CALIDAD -->
+        <div class="area-card">
+          <div class="area-card-illu">
+            <svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+              <!-- Checklist de calidad -->
+              <rect x="30" y="12" width="140" height="76" rx="4" fill="#ffffff" stroke="#0a1d3a" stroke-width="1.5"/>
+              <!-- Header línea -->
+              <line x1="30" y1="24" x2="170" y2="24" stroke="#0a1d3a" stroke-width="1"/>
+              <circle cx="38" cy="18" r="1.5" fill="#f39200"/>
+              <line x1="44" y1="18" x2="80" y2="18" stroke="#cbd5e0" stroke-width="1"/>
+
+              <!-- Items checklist -->
+              <!-- Item 1: OK verde -->
+              <circle cx="44" cy="36" r="5" fill="#ffffff" stroke="#2b7fd6" stroke-width="1.5"/>
+              <polyline points="41,36 43,38 47,34" fill="none" stroke="#2b7fd6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="55" y1="34" x2="120" y2="34" stroke="#0a1d3a" stroke-width="1"/>
+              <line x1="55" y1="38" x2="100" y2="38" stroke="#cbd5e0" stroke-width="0.8"/>
+
+              <!-- Item 2: OK -->
+              <circle cx="44" cy="52" r="5" fill="#ffffff" stroke="#2b7fd6" stroke-width="1.5"/>
+              <polyline points="41,52 43,54 47,50" fill="none" stroke="#2b7fd6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="55" y1="50" x2="115" y2="50" stroke="#0a1d3a" stroke-width="1"/>
+              <line x1="55" y1="54" x2="95" y2="54" stroke="#cbd5e0" stroke-width="0.8"/>
+
+              <!-- Item 3: warning naranja -->
+              <circle cx="44" cy="68" r="5" fill="#f39200" stroke="#f39200" stroke-width="1.5"/>
+              <text x="44" y="71" font-size="8" fill="#ffffff" text-anchor="middle" font-family="sans-serif" font-weight="bold">!</text>
+              <line x1="55" y1="66" x2="125" y2="66" stroke="#0a1d3a" stroke-width="1"/>
+              <line x1="55" y1="70" x2="105" y2="70" stroke="#cbd5e0" stroke-width="0.8"/>
+
+              <!-- Indicador % salud -->
+              <g transform="translate(150, 78)">
+                <circle r="6" fill="none" stroke="#eef1f5" stroke-width="2"/>
+                <circle r="6" fill="none" stroke="#2b7fd6" stroke-width="2" stroke-dasharray="33 38" transform="rotate(-90)"/>
+              </g>
+            </svg>
+          </div>
+          <div class="area-card-title">Calidad</div>
+          <div class="area-card-text">Monitoreo de la salud del sistema: estado de los dispositivos instalados, cobertura de datos y porcentaje de eventos válidos. Garantiza decisiones sobre información confiable.</div>
+        </div>
+
+        <!-- 5. LABORATORIO -->
+        <div class="area-card">
+          <div class="area-card-illu">
+            <svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+              <!-- Matraz + diagrama de experimento -->
+              <!-- Cuerpo del matraz -->
+              <path d="M 88 25 L 88 45 L 75 78 Q 75 85 82 85 L 118 85 Q 125 85 125 78 L 112 45 L 112 25 Z"
+                    fill="#ffffff" stroke="#0a1d3a" stroke-width="1.5"/>
+              <!-- Cuello / boca -->
+              <line x1="86" y1="25" x2="114" y2="25" stroke="#0a1d3a" stroke-width="1.5"/>
+              <line x1="84" y1="22" x2="116" y2="22" stroke="#0a1d3a" stroke-width="1.5"/>
+              <!-- Líquido en el matraz -->
+              <path d="M 90 60 L 85 78 Q 85 82 89 82 L 111 82 Q 115 82 115 78 L 110 60 Z"
+                    fill="#2b7fd6" opacity="0.85"/>
+              <!-- Burbujas -->
+              <circle cx="95" cy="72" r="1.5" fill="#ffffff" opacity="0.8"/>
+              <circle cx="105" cy="68" r="1" fill="#ffffff" opacity="0.8"/>
+              <circle cx="100" cy="76" r="1.2" fill="#ffffff" opacity="0.8"/>
+              <!-- Línea horizontal marcadora -->
+              <line x1="82" y1="55" x2="118" y2="55" stroke="#0a1d3a" stroke-width="0.6" stroke-dasharray="2,2"/>
+
+              <!-- Dos cámaras/sensores comparando: izquierda y derecha del matraz -->
+              <!-- Sensor izq -->
+              <g transform="translate(40,45)">
+                <rect x="-12" y="-8" width="24" height="16" rx="2" fill="#ffffff" stroke="#0a1d3a" stroke-width="1.2"/>
+                <circle cx="0" cy="0" r="4" fill="#f39200"/>
+                <circle cx="0" cy="0" r="2" fill="#ffffff"/>
+              </g>
+              <!-- Sensor der -->
+              <g transform="translate(160,45)">
+                <rect x="-12" y="-8" width="24" height="16" rx="2" fill="#ffffff" stroke="#0a1d3a" stroke-width="1.2"/>
+                <circle cx="0" cy="0" r="4" fill="#2b7fd6"/>
+                <circle cx="0" cy="0" r="2" fill="#ffffff"/>
+              </g>
+              <!-- Flechas hacia el matraz -->
+              <line x1="52" y1="45" x2="73" y2="45" stroke="#0a1d3a" stroke-width="1" stroke-dasharray="2,2"/>
+              <line x1="148" y1="45" x2="127" y2="45" stroke="#0a1d3a" stroke-width="1" stroke-dasharray="2,2"/>
+            </svg>
+          </div>
+          <div class="area-card-title">Laboratorio</div>
+          <div class="area-card-text">Espacio para pruebas piloto y experimentos controlados, donde se validan nuevas tecnologías de medición y se calibran los modelos antes de incorporarlos al sistema productivo.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CÓMO SE USA -->
+    <section class="landing-section uso-section">
+      <h2>Cómo se usa</h2>
+      <p>
+        Cada sección del menú lateral entrega un dashboard específico orientado a responder una pregunta operacional concreta. Los dashboards incluyen filtros propios — período de análisis, operador, línea o bus individual — que permiten profundizar el análisis sin perder contexto. Los gráficos son interactivos y permiten exportar los datos para reportes externos.
+      </p>
+      <p>
+        La plataforma está pensada para uso cotidiano: un despachador puede revisar la ocupación promedio del día anterior antes del primer turno; un gerente puede comparar el rendimiento semanal de dos servicios; una municipalidad puede evaluar el cumplimiento de frecuencias en su comuna. <strong>Cada vista responde a una decisión.</strong>
+      </p>
+    </section>
+
+    <div class="footer">
+      <div>© V&amp;R Ingeniería · Ingeniería precisa para sistemas de transporte complejos</div>
+      <div><span class="footer-orange">Versión piloto</span> · Datos de prueba — no productivos</div>
+    </div>
+
+  </div>
+
+  <!-- VISTA DE DASHBOARD (cuando no estamos en inicio) -->
+  <div id="dashboardView" style="display:none">
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <h1 class="page-title" id="pageTitle"></h1>
+    <p class="page-subtitle" id="pageSubtitle"></p>
+
+    <div id="contentArea">
+      <div class="dashboard-frame" id="iframeContainer" style="display:none">
+        <iframe id="dashboardFrame" src="" frameborder="0" allowfullscreen
+          sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+        </iframe>
+      </div>
+
+      <div class="placeholder" id="placeholderTemplate" style="display:none">
+        <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+          <line x1="9" y1="9" x2="15" y2="9"></line>
+          <line x1="9" y1="13" x2="15" y2="13"></line>
+          <line x1="9" y1="17" x2="13" y2="17"></line>
+        </svg>
+        <div class="placeholder-title">Dashboard en desarrollo</div>
+        <div class="placeholder-text" id="placeholderText"></div>
+        <div class="placeholder-tag">Próximamente</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div>© V&amp;R Ingeniería · Ingeniería precisa para sistemas de transporte complejos</div>
+      <div><span class="footer-orange">Versión piloto</span> · Datos de prueba — no productivos</div>
+    </div>
+  </div>
+
 </main>
 
-<footer>
-  <div class="legal">© V&amp;R Ingeniería · Ingeniería precisa para sistemas de transporte complejos</div>
-  <div class="badge">Piloto activo</div>
-</footer>
+<script>
+(function() {
+  const SECTIONS = {
+    'inicio':             { landing: true },
+    // Operación
+    'op-velocidad':       { url: null, txt: 'Velocidad de la flota en operación regular. Disponible cuando se instalen sensores en buses en servicio.' },
+    'op-subidasbajadas':  { url: null, txt: 'Movimiento de pasajeros agregado por intervalo. Disponible cuando se desplieguen sensores en flota.' },
+    'op-ocupacion':       { url: null, txt: 'Ocupación promedio por bus. Disponible cuando se desplieguen sensores en flota.' },
+    'op-demografia':      { url: null, txt: 'Distribución demográfica (género, edad, accesibilidad). Requiere validar campos del payload crudo del sensor.' },
+    // Mapas
+    'map-posicion':       { url: null, txt: 'Localización en tiempo real de cada unidad. Disponible al desplegar dispositivos en flota.' },
+    'map-velocidades':    { url: null, txt: 'Mapa de calor de velocidades medias por tramo. Identifica zonas de congestión.' },
+    'map-demanda':        { url: null, txt: 'Focos de subidas y bajadas en el territorio. Útil para planificación comercial y reportes a municipalidades.' },
+    // Comparador
+    'cmp-fechas':         { url: null, txt: 'Comparación entre dos días específicos de la operación.' },
+    'cmp-rangos':         { url: null, txt: 'Comparación entre dos rangos de fechas (semanal, mensual).' },
+    // Calidad
+    'cal-dispositivos':   { url: null, txt: 'Estado y salud de cada dispositivo instalado en flota.' },
+    'cal-dato':           { url: null, txt: 'Indicadores de calidad de los datos: GPS válido, velocidad reportada, eventos descartados.' },
+    // Piloto 1
+    'p1-vista':           { url: 'https://datastudio.google.com/embed/reporting/ee026e1b-708d-474b-b147-86a952f0ef64/page/gkGyF' },
+    'p1-velocidad':       { url: null, txt: 'Dashboard individual de velocidad del Piloto 1. Pendiente de armar en Looker.' },
+    'p1-subidasbajadas':  { url: null, txt: 'Dashboard individual de subidas y bajadas del Piloto 1. Pendiente de armar en Looker.' },
+    'p1-ocupacion':       { url: null, txt: 'Dashboard individual de ocupación del Piloto 1. Pendiente de armar en Looker.' },
+    'p1-mapa':            { url: null, txt: 'Dashboard individual del mapa del Piloto 1. Pendiente de armar en Looker.' },
+  };
+
+  const sidebar = document.getElementById('sidebar');
+  const main = document.getElementById('main');
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileBackdrop = document.getElementById('mobileBackdrop');
+  const landingView = document.getElementById('landingView');
+  const dashboardView = document.getElementById('dashboardView');
+  const breadcrumb = document.getElementById('breadcrumb');
+  const pageTitle = document.getElementById('pageTitle');
+  const pageSubtitle = document.getElementById('pageSubtitle');
+  const iframeContainer = document.getElementById('iframeContainer');
+  const dashboardFrame = document.getElementById('dashboardFrame');
+  const placeholderTemplate = document.getElementById('placeholderTemplate');
+  const placeholderText = document.getElementById('placeholderText');
+
+  function isMobile() { return window.innerWidth <= 768; }
+
+  menuToggle.addEventListener('click', function() {
+    if (isMobile()) {
+      sidebar.classList.toggle('mobile-open');
+      mobileBackdrop.classList.toggle('show');
+    } else {
+      sidebar.classList.toggle('collapsed');
+      main.classList.toggle('sidebar-collapsed');
+    }
+  });
+  mobileBackdrop.addEventListener('click', function() {
+    sidebar.classList.remove('mobile-open');
+    mobileBackdrop.classList.remove('show');
+  });
+  window.addEventListener('resize', function() {
+    if (!isMobile()) {
+      sidebar.classList.remove('mobile-open');
+      mobileBackdrop.classList.remove('show');
+    }
+  });
+
+  // Marcar items con datos
+  Object.keys(SECTIONS).forEach(function(k) {
+    if (SECTIONS[k].url) {
+      const item = document.querySelector('[data-section="' + k + '"]');
+      if (item) {
+        const dot = item.querySelector('.placeholder-dot');
+        if (dot) dot.classList.add('has-data');
+      }
+    }
+  });
+
+  // Acordeón pilotos
+  document.querySelectorAll('.piloto-header[data-piloto]').forEach(function(header) {
+    const id = header.dataset.piloto;
+    const items = document.querySelector('[data-piloto-items="' + id + '"]');
+    if (!items) return;
+    header.addEventListener('click', function() {
+      header.classList.toggle('expanded');
+      items.classList.toggle('open');
+    });
+  });
+  const p1Items = document.querySelector('[data-piloto-items="piloto1"]');
+  const p1Header = document.querySelector('[data-piloto="piloto1"]');
+  if (p1Items && p1Header) {
+    p1Items.classList.add('open');
+    p1Header.classList.add('expanded');
+  }
+
+  function activateSection(sectionId) {
+    const cfg = SECTIONS[sectionId];
+    if (!cfg) return;
+    const item = document.querySelector('[data-section="' + sectionId + '"]');
+    if (!item) return;
+
+    document.querySelectorAll('[data-section].active').forEach(function(el) {
+      el.classList.remove('active');
+    });
+    item.classList.add('active');
+
+    if (cfg.landing) {
+      landingView.style.display = '';
+      dashboardView.style.display = 'none';
+    } else {
+      landingView.style.display = 'none';
+      dashboardView.style.display = '';
+
+      const parts = (item.dataset.breadcrumb || '').split(' · ');
+      breadcrumb.innerHTML = parts.map(function(p, i) {
+        return '<span>' + p + '</span>' + (i < parts.length - 1 ? '<span class="breadcrumb-sep">·</span>' : '');
+      }).join('');
+      pageTitle.textContent = item.dataset.title || 'Dashboard';
+      pageSubtitle.textContent = item.dataset.subtitle || '';
+
+      if (cfg.url) {
+        iframeContainer.style.display = '';
+        placeholderTemplate.style.display = 'none';
+        if (dashboardFrame.src !== cfg.url) dashboardFrame.src = cfg.url;
+      } else {
+        iframeContainer.style.display = 'none';
+        placeholderTemplate.style.display = '';
+        placeholderText.textContent = cfg.txt || 'Esta vista estará disponible próximamente.';
+      }
+    }
+
+    if (isMobile()) {
+      sidebar.classList.remove('mobile-open');
+      mobileBackdrop.classList.remove('show');
+    }
+    if (history.replaceState) history.replaceState(null, '', '#' + sectionId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('[data-section]').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      activateSection(item.dataset.section);
+    });
+  });
+
+  const initial = window.location.hash.replace('#', '') || 'inicio';
+  if (SECTIONS[initial]) activateSection(initial);
+  else activateSection('inicio');
+
+  window.addEventListener('hashchange', function() {
+    const id = window.location.hash.replace('#', '');
+    if (id && SECTIONS[id]) activateSection(id);
+  });
+})();
+</script>
 
 </body>
 </html>
