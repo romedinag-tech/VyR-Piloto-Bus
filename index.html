@@ -192,7 +192,7 @@
   .main {
     margin-top: var(--header-height);
     margin-left: var(--sidebar-width);
-    padding: 32px 40px;
+    padding: 24px 32px;
     transition: margin-left 0.3s var(--transition);
     min-height: calc(100vh - var(--header-height));
   }
@@ -201,18 +201,18 @@
   .breadcrumb {
     display: flex; align-items: center; gap: 8px;
     font-size: 11px; color: var(--gris-texto-claro);
-    margin-bottom: 12px; letter-spacing: 1.5px;
+    margin-bottom: 10px; letter-spacing: 1.5px;
     text-transform: uppercase; font-weight: 600;
   }
   .breadcrumb-sep { color: var(--gris-borde-fuerte); }
   .page-title {
-    font-family: 'Fraunces', serif; font-size: 36px; font-weight: 500;
+    font-family: 'Fraunces', serif; font-size: 30px; font-weight: 500;
     line-height: 1.15; color: var(--azul-marino); letter-spacing: -0.5px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
   .page-subtitle {
-    font-size: 15px; color: var(--gris-texto);
-    margin-bottom: 32px; max-width: 760px; line-height: 1.6;
+    font-size: 14px; color: var(--gris-texto);
+    margin-bottom: 18px; max-width: 760px; line-height: 1.5;
   }
 
   /* Dashboard frame y placeholder */
@@ -222,7 +222,12 @@
     box-shadow: var(--sombra-sutil), var(--sombra-media);
     overflow: hidden; position: relative;
   }
-  .dashboard-frame iframe { width: 100%; min-height: 720px; border: 0; display: block; }
+  .dashboard-frame iframe {
+    width: 100%;
+    height: calc(100vh - 220px);
+    min-height: 600px;
+    border: 0; display: block;
+  }
   .placeholder {
     background: var(--fondo-card); border: 1px dashed var(--gris-borde-fuerte);
     border-radius: 4px; padding: 80px 40px; text-align: center;
@@ -342,9 +347,9 @@
 
   /* TABLET */
   @media (max-width: 1024px) {
-    .main { padding: 28px 32px; }
-    .dashboard-frame iframe { min-height: 600px; }
-    .page-title { font-size: 30px; }
+    .main { padding: 20px 24px; }
+    .dashboard-frame iframe { height: calc(100vh - 200px); min-height: 540px; }
+    .page-title { font-size: 26px; }
     .landing-h1 { font-size: 36px; }
     .landing-section h2 { font-size: 24px; }
   }
@@ -380,7 +385,7 @@
     .landing-section p { font-size: 14px; }
     .landing-hero { margin-bottom: 40px; }
     .landing-section { margin-bottom: 40px; }
-    .dashboard-frame iframe { min-height: 480px; }
+    .dashboard-frame iframe { height: calc(100vh - 180px); min-height: 480px; }
     .placeholder { padding: 56px 24px; min-height: 360px; }
     .areas-grid { grid-template-columns: 1fr; }
   }
